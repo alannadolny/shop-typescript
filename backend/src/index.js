@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const app = (0, express_1.default)();
+const users = require('./routes/users');
 app.use(express_1.default.json());
+app.use('/users', users);
 require('dotenv').config();
 const apiConnData = {
     host: process.env.HOST || '127.0.0.1',

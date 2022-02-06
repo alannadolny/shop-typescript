@@ -1,8 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
 const app = express();
+const users = require('./routes/users');
 
 app.use(express.json());
+app.use('/users', users);
 require('dotenv').config();
 
 interface Config {
