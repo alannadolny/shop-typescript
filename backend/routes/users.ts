@@ -5,24 +5,24 @@ const router: Router = express.Router();
 const User = require('../models/User');
 
 interface Person {
-  login: String;
+  login: string;
 }
 
 interface PersonDetails {
-  login: String;
-  email: String;
-  money: Number;
+  login: string;
+  email: string;
+  money: number;
   bought: Array<mongoose.Schema.Types.ObjectId>;
   selling: Array<mongoose.Schema.Types.ObjectId>;
   sold: Array<mongoose.Schema.Types.ObjectId>;
 }
 
-interface foundUser {
+interface FoundUser {
   _id: mongoose.Schema.Types.ObjectId;
-  login: String;
-  password: String;
-  email: String;
-  money: Number;
+  login: string;
+  password: string;
+  email: string;
+  money: number;
   bought: Array<mongoose.Schema.Types.ObjectId>;
   selling: Array<mongoose.Schema.Types.ObjectId>;
   sold: Array<mongoose.Schema.Types.ObjectId>;
@@ -76,7 +76,7 @@ router.post(
 
 router.post('/login', async (req: express.Request, res: express.Response) => {
   try {
-    const foundUser: foundUser = await User.findOne({
+    const foundUser: FoundUser = await User.findOne({
       login: req.body.login,
       password: req.body.password,
     });
@@ -123,7 +123,7 @@ router.delete(
   verifyToken,
   async (req: express.Request, res: express.Response) => {
     try {
-      const foundUser: foundUser = await User.findOne({
+      const foundUser: FoundUser = await User.findOne({
         login: req.body.login,
       }).remove();
       return res.status(200).send(foundUser);
@@ -138,7 +138,7 @@ router.put(
   verifyToken,
   async (req: express.Request, res: express.Response) => {
     try {
-      const foundUser: foundUser = await User.findOne({
+      const foundUser: FoundUser = await User.findOne({
         login: req.body.login,
       }).update(req.body);
       return res.status(200).send(foundUser);

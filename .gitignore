@@ -3,3 +3,4 @@ es5out/
 log/
 .yarn/
 .idea/
+.env
