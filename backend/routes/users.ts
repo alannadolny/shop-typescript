@@ -1,55 +1,151 @@
-import express from 'express';
+import express, { json, Router } from 'express';
+import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
-const router = express.Router();
+const router: Router = express.Router();
 const User = require('../models/User');
 
 interface Person {
   login: String;
 }
 
-const authenticate = (req, res, next) => {
-  const header = req.headers['authorization'];
-  const token = header && header.split(' ')[1];
+interface PersonDetails {
+  login: String;
+  email: String;
+  money: Number;
+  bought: Array<mongoose.Schema.Types.ObjectId>;
+  selling: Array<mongoose.Schema.Types.ObjectId>;
+  sold: Array<mongoose.Schema.Types.ObjectId>;
+}
+
+interface foundUser {
+  _id: mongoose.Schema.Types.ObjectId;
+  login: String;
+  password: String;
+  email: String;
+  money: Number;
+  bought: Array<mongoose.Schema.Types.ObjectId>;
+  selling: Array<mongoose.Schema.Types.ObjectId>;
+  sold: Array<mongoose.Schema.Types.ObjectId>;
+}
+
+function verifyToken(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const header: string = req.headers['authorization'];
+  const token: string = header && header.split(' ')[1];
   if (token === null) return res.status(401);
-  jwt.verify(token, process.env.SECRET_TOKEN || 'token', (err, login) => {
-    if (err) return res.status(403);
-    req.login = login;
-    next();
-  });
-};
+  jwt.verify(
+    token,
+    process.env.SECRET_TOKEN || 'token',
+    (err: jwt.VerifyErrors, login: jwt.JwtPayload) => {
+      if (err) return res.status(403);
+      req.body.login = login.login;
+      next();
+    }
+  );
+}
 
 require('dotenv').config();
 
-router.post('/register', async (req, res) => {
-  try {
-    await new User({
-      login: req.body.login,
-      email: req.body.email,
-      password: req.body.password,
-    }).save();
-    const newUser: Person = { login: req.body.login };
-    const token = jwt.sign(newUser, process.env.SECRET_TOKEN || 'token');
-    res.send(token);
-  } catch (err) {
-    res.status(500).send(err);
+router.post(
+  '/register',
+  async (req: express.Request, res: express.Response) => {
+    try {
+      await new User({
+        login: req.body.login,
+        email: req.body.email,
+        password: req.body.password,
+        money: 0,
+        bought: [],
+        selling: [],
+        sold: [],
+      }).save();
+      const newUser: Person = { login: req.body.login };
+      const token: string = jwt.sign(
+        newUser,
+        process.env.SECRET_TOKEN || 'token'
+      );
+      res.send(token);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
   }
-});
+);
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: express.Request, res: express.Response) => {
   try {
-    const user = await User.findOne({
+    const foundUser: foundUser = await User.findOne({
       login: req.body.login,
       password: req.body.password,
     });
-    if (!user) return res.status(404);
+    if (!foundUser) return res.status(404);
     else {
       const user: Person = { login: req.body.login };
       const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
       return res.send(token);
     }
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send(err);
   }
 });
 
-module.exports = router;
+router.get(
+  '/details',
+  verifyToken,
+  async (req: express.Request, res: express.Response) => {
+    console.log(req.body.login);
+    try {
+      const details: PersonDetails = await User.aggregate([
+        {
+          $match: {
+            login: { $eq: req.body.login },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            password: 0,
+            __v: 0,
+          },
+        },
+      ]);
+      return res.send(details[0]);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
+);
+
+router.delete(
+  '/',
+  verifyToken,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const foundUser: foundUser = await User.findOne({
+        login: req.body.login,
+      }).remove();
+      return res.status(200).send(foundUser);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
+);
+
+router.put(
+  '/',
+  verifyToken,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const foundUser: foundUser = await User.findOne({
+        login: req.body.login,
+      }).update(req.body);
+      return res.status(200).send(foundUser);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
+);
+
+export = router;

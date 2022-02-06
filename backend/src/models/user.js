@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const userSchema = new mongoose_1.Schema({
     login: {
@@ -17,6 +16,27 @@ const userSchema = new mongoose_1.Schema({
         min: 4,
         required: true,
     },
+    money: {
+        type: Number,
+    },
+    bought: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'Product',
+        },
+    ],
+    selling: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'Product',
+        },
+    ],
+    sold: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'Product',
+        },
+    ],
 });
 module.exports = (0, mongoose_1.model)('User', userSchema);
 //# sourceMappingURL=user.js.map

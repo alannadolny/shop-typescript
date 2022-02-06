@@ -16,6 +16,27 @@ const userSchema = new Schema({
     min: 4,
     required: true,
   },
+  money: {
+    type: Number,
+  },
+  bought: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+  ],
+  selling: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+  ],
+  sold: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+  ],
 });
 
-module.exports = model('User', userSchema);
+export = model('User', userSchema);
