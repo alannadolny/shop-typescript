@@ -11,7 +11,7 @@ const authenticate = (req, res, next) => {
   const header = req.headers['authorization'];
   const token = header && header.split(' ')[1];
   if (token === null) return res.status(401);
-  jwt.verify(token, process.env.SECRET_TOKEN, (err, login) => {
+  jwt.verify(token, process.env.SECRET_TOKEN || 'token', (err, login) => {
     if (err) return res.status(403);
     req.login = login;
     next();
@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
       password: req.body.password,
     }).save();
     const newUser: Person = { login: req.body.login };
-    const token = jwt.sign(newUser, process.env.SECRET_TOKEN);
+    const token = jwt.sign(newUser, process.env.SECRET_TOKEN || 'token');
     res.send(token);
   } catch (err) {
     res.status(500).send(err);
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
     if (!user) return res.status(404);
     else {
       const user: Person = { login: req.body.login };
-      const token = jwt.sign(user, process.env.SECRET_TOKEN);
+      const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
       return res.send(token);
     }
   } catch (err) {
