@@ -49,9 +49,7 @@ router.post('/register', async (req, res) => {
             selling: [],
             sold: [],
         }).save();
-        const newUser = { login: req.body.login };
-        const token = jwt.sign(newUser, process.env.SECRET_TOKEN || 'token');
-        res.send(token);
+        res.status(200).send('ok');
     }
     catch (err) {
         return res.status(500).send(err);

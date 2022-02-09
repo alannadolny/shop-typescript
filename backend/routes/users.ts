@@ -62,12 +62,7 @@ router.post(
         selling: [],
         sold: [],
       }).save();
-      const newUser: Person = { login: req.body.login };
-      const token: string = jwt.sign(
-        newUser,
-        process.env.SECRET_TOKEN || 'token'
-      );
-      res.send(token);
+      res.status(200).send('ok');
     } catch (err) {
       return res.status(500).send(err);
     }
