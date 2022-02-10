@@ -62,11 +62,11 @@ router.post('/login', async (req, res) => {
             password: req.body.password,
         });
         if (!foundUser)
-            return res.status(404);
+            return res.status(404).send('not found');
         else {
             const user = { login: req.body.login };
             const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
-            return res.send(token);
+            return res.status(200).send(token);
         }
     }
     catch (err) {

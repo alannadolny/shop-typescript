@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 const app = express();
 const users = require('./routes/users');
+const mail = require('./mailing');
 
 app.use(cors());
 app.use(express.json());

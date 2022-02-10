@@ -75,11 +75,11 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
       login: req.body.login,
       password: req.body.password,
     });
-    if (!foundUser) return res.status(404);
+    if (!foundUser) return res.status(404).send('not found');
     else {
       const user: Person = { login: req.body.login };
       const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
-      return res.send(token);
+      return res.status(200).send(token);
     }
   } catch (err) {
     return res.status(500).send(err);
