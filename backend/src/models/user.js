@@ -37,6 +37,10 @@ const userSchema = new mongoose_1.Schema({
             ref: 'Product',
         },
     ],
+    active: {
+        type: Boolean,
+        required: true,
+    },
 });
 module.exports = (0, mongoose_1.model)('User', userSchema);
 //# sourceMappingURL=user.js.map

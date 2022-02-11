@@ -8,6 +8,7 @@ const mail = require('./mailing');
 app.use(cors());
 app.use(express.json());
 app.use('/users', users);
+app.use('/mail', mail);
 require('dotenv').config();
 
 interface Config {

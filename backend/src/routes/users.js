@@ -40,7 +40,7 @@ function verifyToken(req, res, next) {
 require('dotenv').config();
 router.post('/register', async (req, res) => {
     try {
-        await new User({
+        const user = await new User({
             login: req.body.login,
             email: req.body.email,
             password: req.body.password,
@@ -48,8 +48,9 @@ router.post('/register', async (req, res) => {
             bought: [],
             selling: [],
             sold: [],
+            active: false,
         }).save();
-        res.status(200).send('ok');
+        res.status(200).send({ id: user._id, login: user.login });
     }
     catch (err) {
         return res.status(500).send(err);
@@ -64,6 +65,8 @@ router.post('/login', async (req, res) => {
         if (!foundUser)
             return res.status(404).send('not found');
         else {
+            if (!foundUser.active)
+                return res.status(200).send('not active');
             const user = { login: req.body.login };
             const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
             return res.status(200).send(token);
@@ -74,7 +77,6 @@ router.post('/login', async (req, res) => {
     }
 });
 router.get('/details', verifyToken, async (req, res) => {
-    console.log(req.body.login);
     try {
         const details = await User.aggregate([
             {
@@ -112,6 +114,21 @@ router.put('/', verifyToken, async (req, res) => {
         const foundUser = await User.findOne({
             login: req.body.login,
         }).update(req.body);
+        return res.status(200).send(foundUser);
+    }
+    catch (err) {
+        return res.status(500).send(err);
+    }
+});
+router.put('/confirm', async (req, res) => {
+    try {
+        console.log(req.body.id, req.body.login);
+        const foundUser = await User.findOne({
+            _id: req.body.id,
+            login: req.body.login,
+        }).update({ active: true });
+        if (foundUser.modifiedCount === 0)
+            return res.status(200).send('not found');
         return res.status(200).send(foundUser);
     }
     catch (err) {

@@ -37,6 +37,10 @@ const userSchema = new Schema({
       ref: 'Product',
     },
   ],
+  active: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 export = model('User', userSchema);

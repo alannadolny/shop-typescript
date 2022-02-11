@@ -12,6 +12,7 @@ const mail = require('./mailing');
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/users', users);
+app.use('/mail', mail);
 require('dotenv').config();
 const apiConnData = {
     host: process.env.HOST || '127.0.0.1',

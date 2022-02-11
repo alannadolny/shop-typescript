@@ -40,6 +40,11 @@ function RegisterForm() {
         .post('http://localhost:5432/users/register', values)
         .then((data: AxiosResponse) => {
           if (data.status === 200) {
+            axios.post('http://localhost:5432/mail/', {
+              email: values.email,
+              id: data.data.id,
+              login: data.data.login,
+            });
             resetForm();
             setSuccess(
               'We have sent you a confirmation email, after confirming it, you will be able to log in'

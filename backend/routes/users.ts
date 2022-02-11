@@ -1,4 +1,4 @@
-import express, { json, Router } from 'express';
+import express, { Router } from 'express';
 import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 const router: Router = express.Router();
@@ -15,6 +15,7 @@ interface PersonDetails {
   bought: Array<mongoose.Schema.Types.ObjectId>;
   selling: Array<mongoose.Schema.Types.ObjectId>;
   sold: Array<mongoose.Schema.Types.ObjectId>;
+  active: boolean;
 }
 
 interface FoundUser {
@@ -26,6 +27,15 @@ interface FoundUser {
   bought: Array<mongoose.Schema.Types.ObjectId>;
   selling: Array<mongoose.Schema.Types.ObjectId>;
   sold: Array<mongoose.Schema.Types.ObjectId>;
+  active: boolean;
+}
+
+interface EditedUser {
+  acknowledged: boolean;
+  modifiedCount: number;
+  upsertedId: string;
+  upsertedCount: number;
+  matchedCound: number;
 }
 
 function verifyToken(
@@ -53,7 +63,7 @@ router.post(
   '/register',
   async (req: express.Request, res: express.Response) => {
     try {
-      await new User({
+      const user: FoundUser = await new User({
         login: req.body.login,
         email: req.body.email,
         password: req.body.password,
@@ -61,8 +71,9 @@ router.post(
         bought: [],
         selling: [],
         sold: [],
+        active: false,
       }).save();
-      res.status(200).send('ok');
+      res.status(200).send({ id: user._id, login: user.login });
     } catch (err) {
       return res.status(500).send(err);
     }
@@ -77,6 +88,7 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
     });
     if (!foundUser) return res.status(404).send('not found');
     else {
+      if (!foundUser.active) return res.status(200).send('not active');
       const user: Person = { login: req.body.login };
       const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
       return res.status(200).send(token);
@@ -90,7 +102,6 @@ router.get(
   '/details',
   verifyToken,
   async (req: express.Request, res: express.Response) => {
-    console.log(req.body.login);
     try {
       const details: PersonDetails = await User.aggregate([
         {
@@ -133,7 +144,7 @@ router.put(
   verifyToken,
   async (req: express.Request, res: express.Response) => {
     try {
-      const foundUser: FoundUser = await User.findOne({
+      const foundUser: EditedUser = await User.findOne({
         login: req.body.login,
       }).update(req.body);
       return res.status(200).send(foundUser);
@@ -142,5 +153,19 @@ router.put(
     }
   }
 );
+
+router.put('/confirm', async (req: express.Request, res: express.Response) => {
+  try {
+    console.log(req.body.id, req.body.login);
+    const foundUser: EditedUser = await User.findOne({
+      _id: req.body.id,
+      login: req.body.login,
+    }).update({ active: true });
+    if (foundUser.modifiedCount === 0) return res.status(200).send('not found');
+    return res.status(200).send(foundUser);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
 
 export = router;

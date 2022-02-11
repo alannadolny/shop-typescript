@@ -28,10 +28,14 @@ function LoginForm() {
         .post('http://localhost:5432/users/login', values)
         .then((data: AxiosResponse) => {
           if (data.status === 200) {
-            sessionStorage.setItem('token', data.data);
+            if (data.data === 'not active')
+              setSuccess(
+                'You have to confirm your email address before continuing'
+              );
+            else sessionStorage.setItem('token', data.data);
           }
         })
-        .catch((_) => {
+        .catch((err) => {
           setSuccess('Login or password are not correct');
         });
     },

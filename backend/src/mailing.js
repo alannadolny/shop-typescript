@@ -18,26 +18,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 const nodemailer = __importStar(require("nodemailer"));
+const express_1 = __importDefault(require("express"));
+const router = express_1.default.Router();
 require('dotenv').config();
-async function main() {
-    const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        requireTLS: true,
-        auth: {
-            user: process.env.MAIL_LOGIN,
-            pass: process.env.MAIL_PASSWORD,
-        },
-    });
-    const info = await transporter.sendMail({
-        from: `"Auctionary service" <${process.env.MAIL_LOGIN}>`,
-        to: 'lohosev429@afarek.com',
-        subject: 'Welcome to auctionary service!',
-        text: 'Please, click following link to confirm your account.',
-    });
-}
-main().catch(console.error);
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+        user: process.env.MAIL_LOGIN,
+        pass: process.env.MAIL_PASSWORD,
+    },
+});
+router.post('/', async (req, res) => {
+    try {
+        const info = await transporter.sendMail({
+            from: `"Auctionary service" <${process.env.MAIL_LOGIN}>`,
+            to: req.body.email,
+            subject: 'Welcome to auctionary service!',
+            text: `Please, click following link to confirm your account: http://localhost:3000/confirm/${req.body.id}/${req.body.login}`,
+        });
+    }
+    catch (err) {
+        res.status(500).send(err);
+    }
+});
+module.exports = router;
 //# sourceMappingURL=mailing.js.map
