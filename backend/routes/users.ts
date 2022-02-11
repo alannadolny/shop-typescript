@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
+import dayjs from 'dayjs';
 const router: Router = express.Router();
 const User = require('../models/User');
 
@@ -57,10 +58,36 @@ function verifyToken(
   );
 }
 
+function checkRequestMethod(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const allowedMethod: Array<string> = [
+    'OPTIONS',
+    'HEAD',
+    'CONNECT',
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE',
+    'PATCH',
+  ];
+  if (!allowedMethod.includes(req.method))
+    return res.status(405).send('not allowed method');
+  next();
+}
+
+const getBoolean = (value: string) => {
+  if (value === 'true') return true;
+  else return false;
+};
+
 require('dotenv').config();
 
 router.post(
   '/register',
+  checkRequestMethod,
   async (req: express.Request, res: express.Response) => {
     try {
       const user: FoundUser = await new User({
@@ -80,27 +107,37 @@ router.post(
   }
 );
 
-router.post('/login', async (req: express.Request, res: express.Response) => {
-  try {
-    const foundUser: FoundUser = await User.findOne({
-      login: req.body.login,
-      password: req.body.password,
-    });
-    if (!foundUser) return res.status(404).send('not found');
-    else {
-      if (!foundUser.active) return res.status(200).send('not active');
-      const user: Person = { login: req.body.login };
-      const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
-      return res.status(200).send(token);
+router.post(
+  '/login',
+  checkRequestMethod,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const foundUser: FoundUser = await User.findOne({
+        login: req.body.login,
+        password: req.body.password,
+      });
+      if (!foundUser) return res.status(404).send('not found');
+      else {
+        if (!foundUser.active) return res.status(200).send('not active');
+        const user: Person = { login: req.body.login };
+        const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
+        res.cookie('jwt', token, {
+          secure: getBoolean(process.env.SECURE) || true,
+          httpOnly: true,
+          expires: dayjs().add(2, 'hours').toDate(),
+        });
+        return res.status(200).send(token);
+      }
+    } catch (err) {
+      return res.status(500).send(err);
     }
-  } catch (err) {
-    return res.status(500).send(err);
   }
-});
+);
 
 router.get(
   '/details',
   verifyToken,
+  checkRequestMethod,
   async (req: express.Request, res: express.Response) => {
     try {
       const details: PersonDetails = await User.aggregate([
@@ -127,6 +164,7 @@ router.get(
 router.delete(
   '/',
   verifyToken,
+  checkRequestMethod,
   async (req: express.Request, res: express.Response) => {
     try {
       const foundUser: FoundUser = await User.findOne({
@@ -142,6 +180,7 @@ router.delete(
 router.put(
   '/',
   verifyToken,
+  checkRequestMethod,
   async (req: express.Request, res: express.Response) => {
     try {
       const foundUser: EditedUser = await User.findOne({
@@ -154,18 +193,23 @@ router.put(
   }
 );
 
-router.put('/confirm', async (req: express.Request, res: express.Response) => {
-  try {
-    console.log(req.body.id, req.body.login);
-    const foundUser: EditedUser = await User.findOne({
-      _id: req.body.id,
-      login: req.body.login,
-    }).update({ active: true });
-    if (foundUser.modifiedCount === 0) return res.status(200).send('not found');
-    return res.status(200).send(foundUser);
-  } catch (err) {
-    return res.status(500).send(err);
+router.put(
+  '/confirm',
+  checkRequestMethod,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      console.log(req.body.id, req.body.login);
+      const foundUser: EditedUser = await User.findOne({
+        _id: req.body.id,
+        login: req.body.login,
+      }).update({ active: true });
+      if (foundUser.modifiedCount === 0)
+        return res.status(200).send('not found');
+      return res.status(200).send(foundUser);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
   }
-});
+);
 
 export = router;

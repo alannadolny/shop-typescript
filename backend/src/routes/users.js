@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const express_1 = __importDefault(require("express"));
 const jwt = __importStar(require("jsonwebtoken"));
+const dayjs_1 = __importDefault(require("dayjs"));
 const router = express_1.default.Router();
 const User = require('../models/User');
 function verifyToken(req, res, next) {
@@ -37,8 +38,29 @@ function verifyToken(req, res, next) {
         next();
     });
 }
+function checkRequestMethod(req, res, next) {
+    const allowedMethod = [
+        'OPTIONS',
+        'HEAD',
+        'CONNECT',
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH',
+    ];
+    if (!allowedMethod.includes(req.method))
+        return res.status(405).send('not allowed method');
+    next();
+}
+const getBoolean = (value) => {
+    if (value === 'true')
+        return true;
+    else
+        return false;
+};
 require('dotenv').config();
-router.post('/register', async (req, res) => {
+router.post('/register', checkRequestMethod, async (req, res) => {
     try {
         const user = await new User({
             login: req.body.login,
@@ -56,7 +78,7 @@ router.post('/register', async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.post('/login', async (req, res) => {
+router.post('/login', checkRequestMethod, async (req, res) => {
     try {
         const foundUser = await User.findOne({
             login: req.body.login,
@@ -69,6 +91,11 @@ router.post('/login', async (req, res) => {
                 return res.status(200).send('not active');
             const user = { login: req.body.login };
             const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
+            res.cookie('jwt', token, {
+                secure: getBoolean(process.env.SECURE) || true,
+                httpOnly: true,
+                expires: (0, dayjs_1.default)().add(2, 'hours').toDate(),
+            });
             return res.status(200).send(token);
         }
     }
@@ -76,7 +103,7 @@ router.post('/login', async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.get('/details', verifyToken, async (req, res) => {
+router.get('/details', verifyToken, checkRequestMethod, async (req, res) => {
     try {
         const details = await User.aggregate([
             {
@@ -98,7 +125,7 @@ router.get('/details', verifyToken, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.delete('/', verifyToken, async (req, res) => {
+router.delete('/', verifyToken, checkRequestMethod, async (req, res) => {
     try {
         const foundUser = await User.findOne({
             login: req.body.login,
@@ -109,7 +136,7 @@ router.delete('/', verifyToken, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.put('/', verifyToken, async (req, res) => {
+router.put('/', verifyToken, checkRequestMethod, async (req, res) => {
     try {
         const foundUser = await User.findOne({
             login: req.body.login,
@@ -120,7 +147,7 @@ router.put('/', verifyToken, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.put('/confirm', async (req, res) => {
+router.put('/confirm', checkRequestMethod, async (req, res) => {
     try {
         console.log(req.body.id, req.body.login);
         const foundUser = await User.findOne({
