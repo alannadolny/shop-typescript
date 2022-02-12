@@ -44,9 +44,11 @@ function verifyToken(
   res: express.Response,
   next: express.NextFunction
 ) {
-  const header: string = req.headers['authorization'];
-  const token: string = header && header.split(' ')[1];
-  if (token === null) return res.status(401);
+  const header: string = req.headers.cookie
+    ? req.headers.cookie.split('authorization=')[1]
+    : undefined;
+  const token: string = header && header.split(';')[0];
+  if (token === undefined) return res.status(401).send('invalid token');
   jwt.verify(
     token,
     process.env.SECRET_TOKEN || 'token',
@@ -121,12 +123,14 @@ router.post(
         if (!foundUser.active) return res.status(200).send('not active');
         const user: Person = { login: req.body.login };
         const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
-        res.cookie('jwt', token, {
-          secure: getBoolean(process.env.SECURE) || true,
-          httpOnly: true,
-          expires: dayjs().add(2, 'hours').toDate(),
-        });
-        return res.status(200).send(token);
+        return res
+          .status(200)
+          .cookie('authorization', token, {
+            secure: getBoolean(process.env.SECURE) || true,
+            httpOnly: true,
+            expires: dayjs().add(2, 'hours').toDate(),
+          })
+          .send('token initialized');
       }
     } catch (err) {
       return res.status(500).send(err);

@@ -27,10 +27,12 @@ const dayjs_1 = __importDefault(require("dayjs"));
 const router = express_1.default.Router();
 const User = require('../models/User');
 function verifyToken(req, res, next) {
-    const header = req.headers['authorization'];
-    const token = header && header.split(' ')[1];
-    if (token === null)
-        return res.status(401);
+    const header = req.headers.cookie
+        ? req.headers.cookie.split('authorization=')[1]
+        : undefined;
+    const token = header && header.split(';')[0];
+    if (token === undefined)
+        return res.status(401).send('invalid token');
     jwt.verify(token, process.env.SECRET_TOKEN || 'token', (err, login) => {
         if (err)
             return res.status(403);
@@ -91,12 +93,14 @@ router.post('/login', checkRequestMethod, async (req, res) => {
                 return res.status(200).send('not active');
             const user = { login: req.body.login };
             const token = jwt.sign(user, process.env.SECRET_TOKEN || 'token');
-            res.cookie('jwt', token, {
+            return res
+                .status(200)
+                .cookie('authorization', token, {
                 secure: getBoolean(process.env.SECURE) || true,
                 httpOnly: true,
                 expires: (0, dayjs_1.default)().add(2, 'hours').toDate(),
-            });
-            return res.status(200).send(token);
+            })
+                .send('token initialized');
         }
     }
     catch (err) {

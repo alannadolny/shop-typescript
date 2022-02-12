@@ -4,6 +4,8 @@ import { Button, TextField, Typography } from '@mui/material';
 import axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
 
+axios.defaults.withCredentials = true;
+
 function LoginForm() {
   interface YupSchema {
     login: string;
@@ -25,7 +27,9 @@ function LoginForm() {
     validationSchema: validationSchema,
     onSubmit: (values: YupSchema) => {
       axios
-        .post('http://localhost:5432/users/login', values)
+        .post('http://localhost:5432/users/login', values, {
+          withCredentials: true,
+        })
         .then((data: AxiosResponse) => {
           if (data.status === 200) {
             if (data.data === 'not active')
