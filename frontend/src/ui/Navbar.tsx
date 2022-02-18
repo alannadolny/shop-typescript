@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -14,13 +14,23 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import GavelIcon from '@mui/icons-material/Gavel';
+import { connect } from 'react-redux';
+import { getUser } from '../ducks/users/operations';
+import { RootReducers } from '../ducks/store';
+import { isLogged } from '../ducks/users/selector';
+import { UserProps } from './interfaces';
+import { Link } from 'react-router-dom';
 
 const pages: Array<string> = ['Categories', 'Search', 'Novelties'];
 const settings: Array<string> = ['Profile', 'Dashboard', 'Logout'];
 
-function Navbar() {
+function Navbar({ user, getUser, logged }: UserProps) {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -99,11 +109,29 @@ function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-              </IconButton>
-            </Tooltip>
+            {logged ? (
+              <Tooltip title='Open settings'>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar>{user.login.slice(0, 1)}</Avatar>
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <div>
+                <Link
+                  to='/form/login'
+                  style={{ textDecoration: 'none', color: 'white' }}
+                >
+                  LOGIN
+                </Link>{' '}
+                /{' '}
+                <Link
+                  to='/form/register'
+                  style={{ textDecoration: 'none', color: 'white' }}
+                >
+                  REGISTER
+                </Link>
+              </div>
+            )}
             <Menu
               sx={{ mt: '45px' }}
               id='menu-appbar'
@@ -132,4 +160,16 @@ function Navbar() {
     </AppBar>
   );
 }
-export default Navbar;
+
+const mapStateToProps = (state: RootReducers) => {
+  return {
+    user: state.user,
+    logged: isLogged(state),
+  };
+};
+
+const mapDispatchToProps = {
+  getUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
