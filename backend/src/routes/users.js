@@ -26,35 +26,7 @@ const jwt = __importStar(require("jsonwebtoken"));
 const dayjs_1 = __importDefault(require("dayjs"));
 const router = express_1.default.Router();
 const User = require('../models/User');
-function verifyToken(req, res, next) {
-    const header = req.headers.cookie
-        ? req.headers.cookie.split('authorization=')[1]
-        : undefined;
-    const token = header && header.split(';')[0];
-    if (token === undefined)
-        return res.status(401).send('invalid token');
-    jwt.verify(token, process.env.SECRET_TOKEN || 'token', (err, login) => {
-        if (err)
-            return res.status(403);
-        req.body.login = login.login;
-        next();
-    });
-}
-function checkRequestMethod(req, res, next) {
-    const allowedMethod = [
-        'OPTIONS',
-        'HEAD',
-        'CONNECT',
-        'GET',
-        'POST',
-        'PUT',
-        'DELETE',
-        'PATCH',
-    ];
-    if (!allowedMethod.includes(req.method))
-        return res.status(405).send('not allowed method');
-    next();
-}
+const middlewares_1 = require("./middlewares");
 const getBoolean = (value) => {
     if (value === 'true')
         return true;
@@ -62,7 +34,7 @@ const getBoolean = (value) => {
         return false;
 };
 require('dotenv').config();
-router.post('/register', checkRequestMethod, async (req, res) => {
+router.post('/register', middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const user = await new User({
             login: req.body.login,
@@ -80,7 +52,7 @@ router.post('/register', checkRequestMethod, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.post('/login', checkRequestMethod, async (req, res) => {
+router.post('/login', middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const foundUser = await User.findOne({
             login: req.body.login,
@@ -107,7 +79,7 @@ router.post('/login', checkRequestMethod, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.get('/details', verifyToken, checkRequestMethod, async (req, res) => {
+router.get('/details', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const details = await User.aggregate([
             {
@@ -129,7 +101,7 @@ router.get('/details', verifyToken, checkRequestMethod, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.delete('/', verifyToken, checkRequestMethod, async (req, res) => {
+router.delete('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const foundUser = await User.findOne({
             login: req.body.login,
@@ -140,7 +112,7 @@ router.delete('/', verifyToken, checkRequestMethod, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.put('/', verifyToken, checkRequestMethod, async (req, res) => {
+router.put('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const foundUser = await User.findOne({
             login: req.body.login,
@@ -151,7 +123,7 @@ router.put('/', verifyToken, checkRequestMethod, async (req, res) => {
         return res.status(500).send(err);
     }
 });
-router.put('/confirm', checkRequestMethod, async (req, res) => {
+router.put('/confirm', middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         console.log(req.body.id, req.body.login);
         const foundUser = await User.findOne({

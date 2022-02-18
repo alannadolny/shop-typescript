@@ -13,3 +13,12 @@ export interface UserProps {
   getUser: () => void;
   logged: boolean;
 }
+
+export interface LoggedUserProps {
+  getUser: () => void;
+}
+
+export interface YupSchema {
+  login: string;
+  password: string;
+}

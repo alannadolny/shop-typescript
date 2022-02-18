@@ -1,84 +1,10 @@
 import express, { Router } from 'express';
-import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import dayjs from 'dayjs';
 const router: Router = express.Router();
 const User = require('../models/User');
-
-interface Person {
-  login: string;
-}
-
-interface PersonDetails {
-  login: string;
-  email: string;
-  money: number;
-  bought: Array<mongoose.Schema.Types.ObjectId>;
-  selling: Array<mongoose.Schema.Types.ObjectId>;
-  sold: Array<mongoose.Schema.Types.ObjectId>;
-  active: boolean;
-}
-
-interface FoundUser {
-  _id: mongoose.Schema.Types.ObjectId;
-  login: string;
-  password: string;
-  email: string;
-  money: number;
-  bought: Array<mongoose.Schema.Types.ObjectId>;
-  selling: Array<mongoose.Schema.Types.ObjectId>;
-  sold: Array<mongoose.Schema.Types.ObjectId>;
-  active: boolean;
-}
-
-interface EditedUser {
-  acknowledged: boolean;
-  modifiedCount: number;
-  upsertedId: string;
-  upsertedCount: number;
-  matchedCound: number;
-}
-
-function verifyToken(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  const header: string = req.headers.cookie
-    ? req.headers.cookie.split('authorization=')[1]
-    : undefined;
-  const token: string = header && header.split(';')[0];
-  if (token === undefined) return res.status(401).send('invalid token');
-  jwt.verify(
-    token,
-    process.env.SECRET_TOKEN || 'token',
-    (err: jwt.VerifyErrors, login: jwt.JwtPayload) => {
-      if (err) return res.status(403);
-      req.body.login = login.login;
-      next();
-    }
-  );
-}
-
-function checkRequestMethod(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) {
-  const allowedMethod: Array<string> = [
-    'OPTIONS',
-    'HEAD',
-    'CONNECT',
-    'GET',
-    'POST',
-    'PUT',
-    'DELETE',
-    'PATCH',
-  ];
-  if (!allowedMethod.includes(req.method))
-    return res.status(405).send('not allowed method');
-  next();
-}
+import { verifyToken, checkRequestMethod } from './middlewares';
+import { Person, PersonDetails, FoundUser, EditedUser } from './interfaces';
 
 const getBoolean = (value: string) => {
   if (value === 'true') return true;

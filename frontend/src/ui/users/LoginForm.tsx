@@ -3,15 +3,13 @@ import { FormikValues, useFormik } from 'formik';
 import { Button, TextField, Typography } from '@mui/material';
 import axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { getUser } from '../../ducks/users/operations';
+import { LoggedUserProps, YupSchema } from '../interfaces';
 
 axios.defaults.withCredentials = true;
 
-function LoginForm() {
-  interface YupSchema {
-    login: string;
-    password: string;
-  }
-
+function LoginForm({ getUser }: LoggedUserProps) {
   const [success, setSuccess] = useState<string>('');
 
   const validationSchema: yup.SchemaOf<YupSchema> = yup.object({
@@ -36,7 +34,7 @@ function LoginForm() {
               setSuccess(
                 'You have to confirm your email address before continuing'
               );
-            else sessionStorage.setItem('token', data.data);
+            else getUser();
           }
         })
         .catch((err) => {
@@ -90,4 +88,8 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+const mapDispatchToProps = {
+  getUser,
+};
+
+export default connect(null, mapDispatchToProps)(LoginForm);
