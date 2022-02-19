@@ -3,6 +3,7 @@ import UserForm from './ui/users/UserForm';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Confiration from './ui/Confirmation';
 import Navbar from './ui/Navbar';
+import ProductList from './ui/products/ProductList';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path='/form/:action' element={<UserForm />} />
           <Route path='/confirm/:userId/:login' element={<Confiration />} />
+          <Route path='/products' element={<ProductList />} />
         </Routes>
       </BrowserRouter>
     </div>

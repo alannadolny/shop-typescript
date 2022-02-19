@@ -9,6 +9,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+  },
   added: {
     type: Date,
     required: true,
@@ -24,6 +28,14 @@ const productSchema = new Schema({
   buyer: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
   },
 });
 

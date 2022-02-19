@@ -22,3 +22,21 @@ export interface YupSchema {
   login: string;
   password: string;
 }
+
+export interface Product {
+  _id: string;
+  name: string;
+  category: string;
+  price: number;
+  added: Date;
+  owner: string;
+  sold?: Date;
+  buyer: string;
+  image: string;
+  description: string;
+}
+
+export interface ProductsProps {
+  products: Array<Product>;
+  getProductList: () => void;
+}

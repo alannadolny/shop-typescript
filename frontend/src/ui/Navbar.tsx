@@ -19,28 +19,21 @@ import { getUser } from '../ducks/users/operations';
 import { RootReducers } from '../ducks/store';
 import { isLogged } from '../ducks/users/selector';
 import { UserProps } from './interfaces';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const pages: Array<string> = ['Categories', 'Search', 'Novelties'];
+const pages: Array<string> = ['Categories', 'Search', 'Novelties', 'Products'];
 const settings: Array<string> = ['Profile', 'Dashboard', 'Logout'];
 
 function Navbar({ user, getUser, logged }: UserProps) {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUser();
   }, []);
 
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -66,14 +59,12 @@ function Navbar({ user, getUser, logged }: UserProps) {
               aria-label='account of current user'
               aria-controls='menu-appbar'
               aria-haspopup='true'
-              onClick={handleOpenNavMenu}
               color='inherit'
             >
               <MenuIcon />
             </IconButton>
             <Menu
               id='menu-appbar'
-              anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',
@@ -83,14 +74,13 @@ function Navbar({ user, getUser, logged }: UserProps) {
                 vertical: 'top',
                 horizontal: 'left',
               }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              open={false}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page}>
                   <Typography textAlign='center'>{page}</Typography>
                 </MenuItem>
               ))}
@@ -100,7 +90,7 @@ function Navbar({ user, getUser, logged }: UserProps) {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => navigate(`/${page}`)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -146,7 +136,6 @@ function Navbar({ user, getUser, logged }: UserProps) {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>

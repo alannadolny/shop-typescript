@@ -33,3 +33,15 @@ export interface EditedUser {
   upsertedCount: number;
   matchedCound: number;
 }
+
+export interface Product {
+  name: string;
+  category: string;
+  added: Date;
+  sold?: Date;
+  price: number;
+  buyer?: mongoose.Schema.Types.ObjectId;
+  owner: mongoose.Schema.Types.ObjectId;
+  description: string;
+  image: string;
+}
