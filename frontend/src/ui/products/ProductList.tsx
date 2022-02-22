@@ -14,8 +14,11 @@ import { getProductList } from '../../ducks/products/operation';
 import { ProductsProps, Product } from '../interfaces';
 import { useEffect } from 'react';
 import * as _ from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 function ProductList({ products, getProductList }: ProductsProps) {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (_.isEmpty(products)) getProductList();
   }, []);
@@ -23,12 +26,13 @@ function ProductList({ products, getProductList }: ProductsProps) {
   return (
     <Container>
       <Typography variant='h2' color='secondary'>
-        Products
+        Buy now!
       </Typography>{' '}
       {products &&
         products.map((product: Product) => {
           return (
             <Card
+              onClick={() => navigate(`/details/${product._id}`)}
               sx={{
                 maxWidth: 345,
                 display: 'inline-flex',

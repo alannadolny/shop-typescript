@@ -1,3 +1,5 @@
+import { DetailedHTMLProps, ImgHTMLAttributes } from 'react';
+
 export interface UserDetails {
   active: boolean;
   bought: Array<string>;
@@ -38,5 +40,9 @@ export interface Product {
 
 export interface ProductsProps {
   products: Array<Product>;
+  getProductList: () => void;
+}
+
+export interface GetProductListProps {
   getProductList: () => void;
 }

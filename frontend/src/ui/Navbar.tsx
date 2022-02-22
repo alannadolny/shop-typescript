@@ -21,8 +21,8 @@ import { isLogged } from '../ducks/users/selector';
 import { UserProps } from './interfaces';
 import { Link, useNavigate } from 'react-router-dom';
 
-const pages: Array<string> = ['Categories', 'Search', 'Novelties', 'Products'];
-const settings: Array<string> = ['Profile', 'Dashboard', 'Logout'];
+const pages: Array<string> = ['Categories', 'Search', 'Novelties', 'Buy now'];
+const settings: Array<string> = ['Profile', 'Dashboard', 'Cart', 'Logout'];
 
 function Navbar({ user, getUser, logged }: UserProps) {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);

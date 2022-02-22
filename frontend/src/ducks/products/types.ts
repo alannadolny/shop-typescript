@@ -1,3 +1,5 @@
+import { Product } from '../../ui/interfaces';
+
 const GET_PRODUCTS_SUCCESS: string = 'GET_PRODUCTS_SUCCESS';
 const GET_PRODUCTS_REQUEST: string = 'GET_PRODUCTS_REQUEST';
 const GET_PRODUCTS_FAILURE: string = 'GET_PRODUCTS_FAILURE';
@@ -8,22 +10,7 @@ export const types = {
   GET_PRODUCTS_FAILURE,
 };
 
-interface GetProductsRequest {
-  type: typeof GET_PRODUCTS_REQUEST;
-  payload: unknown;
-}
-
-interface GetProductsFailure {
-  type: typeof GET_PRODUCTS_FAILURE;
-  payload: unknown;
-}
-
-interface GetProductsSuccess {
+export interface GetProductsSuccess {
   type: typeof GET_PRODUCTS_SUCCESS;
-  payload: unknown;
+  payload: Array<Product>;
 }
-
-export type ProductsDispatchTypes =
-  | GetProductsRequest
-  | GetProductsFailure
-  | GetProductsSuccess;
