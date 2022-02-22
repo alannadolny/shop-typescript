@@ -136,9 +136,16 @@ function Navbar({ user, getUser, logged }: UserProps) {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    navigate(`/${setting}`);
+                    handleCloseUserMenu();
+                  }}
+                >
                   <Typography textAlign='center'>{setting}</Typography>
                 </MenuItem>
               ))}

@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import * as _ from 'lodash';
 import { GetProductListProps } from '../interfaces';
 import ProductPresentation from './ProductPresentation';
+import ProductAction from './ProductAction';
 
 function ProductDetails({ getProductList }: GetProductListProps) {
   const { productId } = useParams<string>();
@@ -22,9 +23,14 @@ function ProductDetails({ getProductList }: GetProductListProps) {
   return (
     <Container sx={{ display: 'flex', marginTop: '10px' }}>
       <Box>
-        <img src={product?.image} alt='' />
+        <img
+          style={{ width: '600px', height: '600px' }}
+          src={product?.image}
+          alt=''
+        />
       </Box>
       <ProductPresentation />
+      <ProductAction />
     </Container>
   );
 }

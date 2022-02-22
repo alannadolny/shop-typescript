@@ -11,11 +11,13 @@ const cookieParser = require('cookie-parser');
 const users = require('./routes/users');
 const mail = require('./mailing');
 const products = require('./routes/products');
+const carts = require('./routes/carts');
 app.use((0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express_1.default.json());
 app.use(cookieParser());
 app.use('/users', users);
 app.use('/mail', mail);
+app.use('/carts', carts);
 app.use('/products', products);
 require('dotenv').config();
 const apiConnData = {

@@ -45,3 +45,8 @@ export interface Product {
   description: string;
   image: string;
 }
+
+export interface Cart {
+  owner: mongoose.Schema.Types.ObjectId;
+  products: Array<mongoose.Schema.Types.ObjectId>;
+}

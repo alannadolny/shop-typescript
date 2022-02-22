@@ -4,7 +4,6 @@ import {
   Divider,
   ListItemAvatar,
   ListItemText,
-  Avatar,
   Typography,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
