@@ -13,6 +13,7 @@ router.post('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, as
         const newCart = await Cart({
             owner: user._id,
             products: [req.body.product],
+            active: true,
         }).save();
         return res.status(200).send(newCart);
     }
@@ -23,7 +24,15 @@ router.post('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, as
 router.get('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const user = await User.findOne({ login: req.body.login });
-        const carts = await Cart.find({ owner: user._id });
+        const carts = await Cart.aggregate([
+            {
+                $match: {
+                    owner: {
+                        $eq: user._id,
+                    },
+                },
+            },
+        ]).sort({ active: 'descending' });
         return res.status(200).send(carts);
     }
     catch (err) {
@@ -33,10 +42,10 @@ router.get('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, asy
 router.post('/new', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const user = await User.findOne({ login: req.body.login });
-        await Cart.findOne({ owner: user._id }).updateOne({
+        await Cart.findOne({ owner: user._id, active: true }).updateOne({
             $push: { products: [req.body.product] },
         });
-        return res.status(200).send('OK');
+        return res.status(200).send({ id: req.body.product });
     }
     catch (err) {
         return res.status(500).send(err);

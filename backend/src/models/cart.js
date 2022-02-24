@@ -13,6 +13,10 @@ const cartSchema = new mongoose_1.Schema({
             required: true,
         },
     ],
+    active: {
+        type: Boolean,
+        required: true,
+    },
 });
 module.exports = (0, mongoose_1.model)('Cart', cartSchema);
 //# sourceMappingURL=cart.js.map

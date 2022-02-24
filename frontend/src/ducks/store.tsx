@@ -5,10 +5,12 @@ import { createMiddleware } from 'redux-api-middleware';
 import { userReducer } from './users/reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { productsReducer } from './products/reducer';
+import { CartsReducer } from './carts/reducer';
 
 const combinedReducers = combineReducers({
   user: userReducer,
   products: productsReducer,
+  carts: CartsReducer,
 });
 
 const store = createStore(

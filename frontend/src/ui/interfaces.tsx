@@ -1,5 +1,3 @@
-import { DetailedHTMLProps, ImgHTMLAttributes } from 'react';
-
 export interface UserDetails {
   active: boolean;
   bought: Array<string>;
@@ -45,4 +43,32 @@ export interface ProductsProps {
 
 export interface GetProductListProps {
   getProductList: () => void;
+}
+
+export interface User {
+  active: boolean;
+  bought: Array<Product>;
+  email: string;
+  login: string;
+  money: number;
+  selling: Array<Product>;
+  sold: Array<Product>;
+}
+
+export interface Cart {
+  _id: string;
+  owner: string;
+  products: Array<string>;
+  active: boolean;
+}
+
+export interface CartProps {
+  carts: Array<Cart>;
+  products: Array<Product>;
+  getCartList: () => void;
+  getProductList: () => void;
+}
+
+export interface AddToCartInterface {
+  addToCart: (id: string | undefined) => void;
 }

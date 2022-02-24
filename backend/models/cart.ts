@@ -13,6 +13,10 @@ const cartSchema = new Schema({
       required: true,
     },
   ],
+  active: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 export = model('Cart', cartSchema);

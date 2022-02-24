@@ -8,22 +8,7 @@ export const types = {
   GET_USER_SUCCESS,
 };
 
-interface GetUserRequest {
-  type: typeof GET_USER_REQUEST;
-  payload: unknown;
-}
-
-interface GetUserFailure {
-  type: typeof GET_USER_FAILURE;
-  payload: unknown;
-}
-
-interface GetUserSuccess {
+export interface UserDispatchType {
   type: typeof GET_USER_SUCCESS;
   payload: unknown;
 }
-
-export type UserDispatchTypes =
-  | GetUserRequest
-  | GetUserFailure
-  | GetUserSuccess;
