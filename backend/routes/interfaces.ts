@@ -48,6 +48,6 @@ export interface Product {
 
 export interface Cart {
   owner: mongoose.Schema.Types.ObjectId;
-  products: Array<mongoose.Schema.Types.ObjectId>;
+  products: Array<mongoose.Types.ObjectId>;
   active: boolean;
 }

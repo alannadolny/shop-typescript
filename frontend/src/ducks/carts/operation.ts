@@ -47,3 +47,72 @@ export const addToCart = (id: string | undefined) => {
     ],
   });
 };
+
+export const deleteFromCart = (id: string | undefined) => {
+  return createAction({
+    endpoint: 'http://localhost:5432/carts/product',
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      product: id,
+    }),
+    types: [
+      types.DELETE_FROM_CART_REQUEST,
+      {
+        type: types.DELETE_FROM_CART_SUCCESS,
+        payload: async (action, state, res) => {
+          const json = await res.json();
+          return json.id;
+        },
+      },
+      types.DELETE_FROM_CART_FAILURE,
+    ],
+  });
+};
+
+export const deleteCart = () => {
+  return createAction({
+    endpoint: 'http://localhost:5432/carts/all',
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    types: [
+      types.DELETE_CART_REQUEST,
+      {
+        type: types.DELETE_CART_SUCCESS,
+        payload: async (action, state, res) => {
+          const json = await res.json();
+          return json;
+        },
+      },
+      types.DELETE_CART_FAILURE,
+    ],
+  });
+};
+
+export const buyCart = () => {
+  return createAction({
+    endpoint: 'http://localhost:5432/carts/buy',
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    types: [
+      types.BUY_CART_REQUEST,
+      {
+        type: types.BUY_CART_SUCCESS,
+        payload: async (action, state, res) => {
+          const json = await res.json();
+          return json;
+        },
+      },
+      types.BUY_CART_FAILURE,
+    ],
+  });
+};

@@ -142,4 +142,22 @@ router.put(
   }
 );
 
+router.get(
+  '/logout',
+  verifyToken,
+  checkRequestMethod,
+  async (req: express.Request, res: express.Response) => {
+    try {
+      return res
+        .clearCookie('authorization', {
+          secure: getBoolean(process.env.SECURE) || true,
+          httpOnly: true,
+        })
+        .send('cookie cleared');
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
+);
+
 export = router;

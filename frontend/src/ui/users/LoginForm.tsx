@@ -6,12 +6,13 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { getUser } from '../../ducks/users/operations';
 import { LoggedUserProps, YupSchema } from '../interfaces';
+import { useNavigate } from 'react-router-dom';
 
 axios.defaults.withCredentials = true;
 
 function LoginForm({ getUser }: LoggedUserProps) {
   const [success, setSuccess] = useState<string>('');
-
+  const navigate = useNavigate();
   const validationSchema: yup.SchemaOf<YupSchema> = yup.object({
     login: yup.string().required('Login is required'),
     password: yup.string().required('Password is required'),
@@ -34,7 +35,10 @@ function LoginForm({ getUser }: LoggedUserProps) {
               setSuccess(
                 'You have to confirm your email address before continuing'
               );
-            else getUser();
+            else {
+              getUser();
+              navigate('/search');
+            }
           }
         })
         .catch((err) => {

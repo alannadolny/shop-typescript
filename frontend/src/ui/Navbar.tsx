@@ -20,13 +20,20 @@ import { RootReducers } from '../ducks/store';
 import { isLogged } from '../ducks/users/selector';
 import { UserProps } from './interfaces';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const pages: Array<string> = ['Categories', 'Search', 'Novelties', 'Buy now'];
-const settings: Array<string> = ['Profile', 'Dashboard', 'Cart', 'Logout'];
+const settings: Array<string> = ['Profile', 'User panel', 'Cart', 'Logout'];
 
 function Navbar({ user, getUser, logged }: UserProps) {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+
+  const logout = () => {
+    axios.get('http://localhost:5432/users/logout').then(() => {
+      getUser();
+    });
+  };
 
   useEffect(() => {
     getUser();
@@ -142,7 +149,8 @@ function Navbar({ user, getUser, logged }: UserProps) {
                 <MenuItem
                   key={setting}
                   onClick={() => {
-                    navigate(`/${setting}`);
+                    if (setting === 'Logout') logout();
+                    else navigate(`/${setting}`);
                     handleCloseUserMenu();
                   }}
                 >

@@ -67,8 +67,12 @@ export interface CartProps {
   products: Array<Product>;
   getCartList: () => void;
   getProductList: () => void;
+  deleteFromCart: (id: string | undefined) => void;
+  deleteCart: () => void;
+  buyCart: () => void;
 }
 
 export interface AddToCartInterface {
   addToCart: (id: string | undefined) => void;
+  logged: boolean;
 }

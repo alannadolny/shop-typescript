@@ -1,22 +1,22 @@
 import {
   Container,
-  Card,
-  CardContent,
   Typography,
-  CardMedia,
+  Card,
   CardActionArea,
+  CardMedia,
+  CardContent,
   Box,
 } from '@mui/material';
 import { connect } from 'react-redux';
 import { getProducts } from '../../ducks/products/selector';
-import { RootReducers } from '../../ducks/store';
 import { getProductList } from '../../ducks/products/operation';
-import { ProductsProps, Product } from '../interfaces';
+import { RootReducers } from '../../ducks/store';
+import { Product, ProductsProps } from '../interfaces';
 import { useEffect } from 'react';
 import * as _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
 
-function ProductList({ products, getProductList }: ProductsProps) {
+function ProductNovelties({ products, getProductList }: ProductsProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,10 +26,10 @@ function ProductList({ products, getProductList }: ProductsProps) {
   return (
     <Container>
       <Typography variant='h5' color='secondary'>
-        Buy now!
-      </Typography>{' '}
+        Top 5 new products:
+      </Typography>
       {products &&
-        products.map((product: Product) => {
+        products.slice(0, 5).map((product: Product) => {
           return (
             <Card
               onClick={() => navigate(`/details/${product._id}`)}
@@ -79,7 +79,7 @@ function ProductList({ products, getProductList }: ProductsProps) {
               </CardActionArea>
             </Card>
           );
-        })}{' '}
+        })}
     </Container>
   );
 }
@@ -94,4 +94,4 @@ const mapDispatchToProps = {
   getProductList,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductNovelties);

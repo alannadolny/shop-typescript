@@ -138,5 +138,18 @@ router.put('/confirm', middlewares_1.checkRequestMethod, async (req, res) => {
         return res.status(500).send(err);
     }
 });
+router.get('/logout', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
+    try {
+        return res
+            .clearCookie('authorization', {
+            secure: getBoolean(process.env.SECURE) || true,
+            httpOnly: true,
+        })
+            .send('cookie cleared');
+    }
+    catch (err) {
+        return res.status(500).send(err);
+    }
+});
 module.exports = router;
 //# sourceMappingURL=users.js.map

@@ -7,6 +7,17 @@ const Cart = require('../models/cart');
 const express_1 = __importDefault(require("express"));
 const middlewares_1 = require("./middlewares");
 const router = express_1.default.Router();
+const deleteOneProduct = (productArray, productToDelete) => {
+    let deleted = 0;
+    return productArray.filter((el) => {
+        if (deleted === 0 && el.toString() === productToDelete) {
+            deleted = 1;
+            return false;
+        }
+        else
+            return true;
+    });
+};
 router.post('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const user = await User.findOne({ login: req.body.login });
@@ -42,10 +53,73 @@ router.get('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, asy
 router.post('/new', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
     try {
         const user = await User.findOne({ login: req.body.login });
-        await Cart.findOne({ owner: user._id, active: true }).updateOne({
-            $push: { products: [req.body.product] },
+        const cart = await Cart.findOne({ owner: user._id, active: true });
+        if (cart) {
+            await Cart.findOne({ owner: user._id, active: true }).updateOne({
+                $push: { products: [req.body.product] },
+            });
+        }
+        else {
+            const newCart = await Cart({
+                owner: user._id,
+                products: [req.body.product],
+                active: true,
+            }).save();
+        }
+        return res.status(200).send({ id: req.body.product });
+    }
+    catch (err) {
+        return res.status(500).send(err);
+    }
+});
+router.delete('/product', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
+    try {
+        const user = await User.findOne({ login: req.body.login });
+        const cart = await Cart.findOne({
+            owner: user._id,
+            active: true,
+        });
+        const newProductList = deleteOneProduct(cart.products, req.body.product);
+        await Cart.findOneAndUpdate({ owner: user._id, active: true }, {
+            products: newProductList,
         });
         return res.status(200).send({ id: req.body.product });
+    }
+    catch (err) {
+        return res.status(500).send(err);
+    }
+});
+router.delete('/all', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
+    try {
+        const user = await User.findOne({ login: req.body.login });
+        const cart = await Cart.findOne({
+            owner: user._id,
+            active: true,
+        });
+        await Cart.findOne({
+            owner: user._id,
+            active: true,
+        }).remove();
+        res.status(200).send(cart);
+    }
+    catch (err) {
+        return res.status(500).send(err);
+    }
+});
+router.patch('/buy', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
+    try {
+        const user = await User.findOne({ login: req.body.login });
+        const cart = await Cart.findOne({
+            owner: user._id,
+            active: true,
+        });
+        await Cart.findOne({
+            owner: user._id,
+            active: true,
+        }).update({
+            active: false,
+        });
+        return res.status(200).send(cart);
     }
     catch (err) {
         return res.status(500).send(err);
