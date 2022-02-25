@@ -1,4 +1,5 @@
 import { Product } from '../../ui/interfaces';
+import { getUser } from '../users/operations';
 import { types, GetProductsSuccess } from './types';
 
 export const productsReducer = (
@@ -12,6 +13,10 @@ export const productsReducer = (
       return action.payload;
     case types.GET_PRODUCTS_FAILURE:
       return [];
+    case types.SELL_PRODUCT_SUCCESS:
+      return [...state, ...action.payload];
+    case types.DELETE_PRODUCT_SUCCESS:
+      return [...state.filter((el) => el._id !== action.payload[0]._id)];
     default:
       return state;
   }

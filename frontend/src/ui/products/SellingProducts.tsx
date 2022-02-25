@@ -3,51 +3,52 @@ import {
   Card,
   CardContent,
   Typography,
-  CardMedia,
   CardActionArea,
+  CardMedia,
   Box,
+  CardActions,
+  Button,
 } from '@mui/material';
 import { connect } from 'react-redux';
-import { getProducts } from '../../ducks/products/selector';
 import { RootReducers } from '../../ducks/store';
-import { getProductList } from '../../ducks/products/operation';
-import { ProductsProps, Product } from '../interfaces';
-import { useEffect } from 'react';
-import * as _ from 'lodash';
+import { SellingProductProps } from '../interfaces';
+import { getUser } from '../../ducks/users/operations';
 import { useNavigate } from 'react-router-dom';
+import { deleteProduct } from '../../ducks/products/operation';
 
-function ProductList({ products, getProductList }: ProductsProps) {
+function SellingProducts({
+  user,
+  getUser,
+  deleteProduct,
+}: SellingProductProps) {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (_.isEmpty(products)) getProductList();
-  }, []);
-
   return (
-    <Container>
-      <Typography variant='h5' color='secondary'>
-        Buy now!
-      </Typography>{' '}
-      {products &&
-        products.map((product: Product) => {
+    <Container sx={{ display: 'block' }}>
+      <Box>Current selling products:</Box>
+
+      {user.selling &&
+        user.selling.map((product) => {
           return (
             <Card
-              onClick={() => navigate(`/details/${product._id}`)}
               sx={{
                 maxWidth: 345,
-                display: 'inline-flex',
+                display: 'block',
                 margin: '10px',
               }}
               key={product._id}
             >
               <CardActionArea>
                 <CardMedia
+                  onClick={() => navigate(`/details/${product._id}`)}
                   component='img'
                   height='200'
                   image={product.image}
                   alt='error'
                 />
-                <CardContent>
+                <CardContent
+                  onClick={() => navigate(`/details/${product._id}`)}
+                >
                   <Box
                     sx={{ display: 'flex', justifyContent: 'space-between' }}
                   >
@@ -77,21 +78,32 @@ function ProductList({ products, getProductList }: ProductsProps) {
                   </Typography>
                 </CardContent>
               </CardActionArea>
+              <Button
+                onClick={() => {
+                  deleteProduct(product._id);
+                }}
+                color='secondary'
+                size='small'
+                sx={{ postion: 'relative', left: '10px' }}
+              >
+                Delete
+              </Button>
             </Card>
           );
-        })}{' '}
+        })}
     </Container>
   );
 }
 
 const mapStateToProps = (state: RootReducers) => {
   return {
-    products: getProducts(state),
+    user: state.user,
   };
 };
 
 const mapDispatchToProps = {
-  getProductList,
+  getUser,
+  deleteProduct,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
+export default connect(mapStateToProps, mapDispatchToProps)(SellingProducts);

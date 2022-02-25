@@ -1,10 +1,10 @@
 import { FoundUser, Cart as CartInterface, Product } from './interfaces';
 const User = require('../models/User');
 const Cart = require('../models/cart');
+const product = require('../models/product');
 import express, { Router } from 'express';
 import mongoose, { ObjectId } from 'mongoose';
 import { verifyToken, checkRequestMethod } from './middlewares';
-import user from '../models/user';
 const router: Router = express.Router();
 
 const deleteOneProduct = (
@@ -152,6 +152,17 @@ router.patch(
       }).update({
         active: false,
       });
+      for (const productToBuy of cart.products) {
+        await User.findOne({ login: req.body.login }).updateOne({
+          $push: { bought: [productToBuy] },
+        });
+        const productToAdd: Product = await product.findOne({
+          _id: productToBuy,
+        });
+        await User.findOne({ _id: productToAdd.owner }).updateOne({
+          $push: { sold: [productToBuy] },
+        });
+      }
       return res.status(200).send(cart);
     } catch (err) {
       return res.status(500).send(err);

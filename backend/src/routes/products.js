@@ -30,9 +30,30 @@ router.post('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, as
             image: req.body.image,
             description: req.body.description,
         }).save();
+        await User.findOne({ login: req.body.login }).updateOne({
+            $push: { selling: [addedProduct._id] },
+        });
         return res.status(200).send(addedProduct);
     }
     catch (err) {
+        return res.status(500).send(err);
+    }
+});
+router.delete('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, async (req, res) => {
+    try {
+        const foundUser = await User.findOne({
+            login: req.body.login,
+        });
+        const productToDelete = await Product.findOne({ _id: req.body.product });
+        await Product.findOne({ _id: req.body.product }).remove();
+        const newProductList = foundUser.selling.filter((el) => el.toString() !== req.body.product.toString());
+        await User.findOne({ login: req.body.login }).update({
+            selling: newProductList,
+        });
+        return res.status(200).send(productToDelete);
+    }
+    catch (err) {
+        console.log(err);
         return res.status(500).send(err);
     }
 });

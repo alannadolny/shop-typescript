@@ -22,7 +22,7 @@ import { UserProps } from './interfaces';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const pages: Array<string> = ['Categories', 'Search', 'Novelties', 'Buy now'];
+const pages: Array<string> = ['Categories', 'Search', 'Novelties'];
 const settings: Array<string> = ['User panel', 'Cart', 'Logout'];
 
 function Navbar({ user, getUser, logged }: UserProps) {
@@ -32,6 +32,7 @@ function Navbar({ user, getUser, logged }: UserProps) {
   const logout = () => {
     axios.get('http://localhost:5432/users/logout').then(() => {
       getUser();
+      navigate('/form/login');
     });
   };
 
@@ -109,7 +110,7 @@ function Navbar({ user, getUser, logged }: UserProps) {
             {logged ? (
               <Tooltip title='Open settings'>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar>{user.login.slice(0, 1)}</Avatar>
+                  <Avatar>{user.login ? user.login.slice(0, 1) : ''}</Avatar>
                 </IconButton>
               </Tooltip>
             ) : (

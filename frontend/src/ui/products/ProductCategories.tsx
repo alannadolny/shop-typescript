@@ -10,6 +10,7 @@ import {
   CardMedia,
   CardContent,
   Typography,
+  ListSubheader,
 } from '@mui/material';
 import { RootReducers } from '../../ducks/store';
 import { getProducts } from '../../ducks/products/selector';
@@ -38,7 +39,16 @@ function ProductCategories({ products, getProductList }: ProductsProps) {
 
   return (
     <Container sx={{ display: 'inline-flex' }}>
-      <List sx={style} component='nav' aria-label='mailbox folders'>
+      <List
+        subheader={
+          <ListSubheader component='div' id='nested-list-subheader'>
+            Choose category:
+          </ListSubheader>
+        }
+        sx={style}
+        component='nav'
+        aria-label='mailbox folders'
+      >
         {_.uniq(products.map((el) => el.category)).map((el) => {
           return (
             <div>

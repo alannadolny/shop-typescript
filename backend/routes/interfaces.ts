@@ -35,6 +35,7 @@ export interface EditedUser {
 }
 
 export interface Product {
+  _id: mongoose.Schema.Types.ObjectId;
   name: string;
   category: string;
   added: Date;

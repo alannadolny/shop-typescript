@@ -4,7 +4,14 @@ import dayjs from 'dayjs';
 const router: Router = express.Router();
 const User = require('../models/User');
 import { verifyToken, checkRequestMethod } from './middlewares';
-import { Person, PersonDetails, FoundUser, EditedUser } from './interfaces';
+import {
+  Person,
+  PersonDetails,
+  FoundUser,
+  EditedUser,
+  Product,
+} from './interfaces';
+import product from '../models/product';
 
 const getBoolean = (value: string) => {
   if (value === 'true') return true;
@@ -81,6 +88,30 @@ router.get(
             _id: 0,
             password: 0,
             __v: 0,
+          },
+        },
+        {
+          $lookup: {
+            from: product.collection.name,
+            localField: 'selling',
+            foreignField: '_id',
+            as: 'selling',
+          },
+        },
+        {
+          $lookup: {
+            from: product.collection.name,
+            localField: 'sold',
+            foreignField: '_id',
+            as: 'sold',
+          },
+        },
+        {
+          $lookup: {
+            from: product.collection.name,
+            localField: 'bought',
+            foreignField: '_id',
+            as: 'bought',
           },
         },
       ]);

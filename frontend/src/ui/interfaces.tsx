@@ -1,11 +1,12 @@
 export interface UserDetails {
-  active: boolean;
-  bought: Array<string>;
-  email: string;
-  login: string;
-  money: number;
-  selling: Array<string>;
-  sold: Array<string>;
+  _id?: string;
+  active?: boolean;
+  bought?: Array<Product>;
+  email?: string;
+  login?: string;
+  money?: number;
+  selling?: Array<Product>;
+  sold?: Array<Product>;
 }
 
 export interface UserProps {
@@ -80,4 +81,22 @@ export interface AddToCartInterface {
 export interface UserProfileProps {
   user: UserDetails;
   getUser: () => void;
+}
+
+export interface ProductYupSchema {
+  name: string;
+  category: string;
+  price: number;
+  description: string;
+  image: string;
+}
+
+export interface ProductFormProps {
+  sellProduct: (productToSell: ProductYupSchema) => void;
+}
+
+export interface SellingProductProps {
+  user: UserDetails;
+  getUser: () => void;
+  deleteProduct: (id: string) => void;
 }

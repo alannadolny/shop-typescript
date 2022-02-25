@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const User = require('../models/User');
 const Cart = require('../models/cart');
+const product = require('../models/product');
 const express_1 = __importDefault(require("express"));
 const middlewares_1 = require("./middlewares");
 const router = express_1.default.Router();
@@ -119,6 +120,17 @@ router.patch('/buy', middlewares_1.verifyToken, middlewares_1.checkRequestMethod
         }).update({
             active: false,
         });
+        for (const productToBuy of cart.products) {
+            await User.findOne({ login: req.body.login }).updateOne({
+                $push: { bought: [productToBuy] },
+            });
+            const productToAdd = await product.findOne({
+                _id: productToBuy,
+            });
+            await User.findOne({ _id: productToAdd.owner }).updateOne({
+                $push: { sold: [productToBuy] },
+            });
+        }
         return res.status(200).send(cart);
     }
     catch (err) {

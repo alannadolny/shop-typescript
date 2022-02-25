@@ -11,13 +11,18 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import InfoIcon from '@mui/icons-material/Info';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { useNavigate } from 'react-router-dom';
+import SellingProducts from '../products/SellingProducts';
+import * as _ from 'lodash';
+import SalesInformation from '../products/SalesInformation';
 
 function UserProfile({ user, getUser }: UserProfileProps) {
   const [openInfo, setOpenInfo] = useState<boolean>(false);
   const [openPanel, setOpenPanel] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleClickInfo = () => {
     setOpenInfo(!openInfo);
@@ -49,10 +54,7 @@ function UserProfile({ user, getUser }: UserProfileProps) {
         </ListItemButton>
         <Collapse in={openInfo} timeout='auto' unmountOnExit>
           <List component='div' disablePadding>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary='Starred' />
+            <SalesInformation />
           </List>
         </Collapse>
       </List>
@@ -67,11 +69,15 @@ function UserProfile({ user, getUser }: UserProfileProps) {
         </ListItemButton>
         <Collapse in={openPanel} timeout='auto' unmountOnExit>
           <List component='div' disablePadding>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary='Starred' />
+            <ListItemButton onClick={() => navigate('/add/product')}>
+              <AddShoppingCartIcon
+                fontSize='medium'
+                sx={{ margin: '10px', color: 'grey' }}
+              />
+              Sell your product
+            </ListItemButton>
           </List>
+          {!_.isEmpty(user.selling) ? <SellingProducts /> : ''}
         </Collapse>
       </List>
     </Container>

@@ -27,6 +27,7 @@ const dayjs_1 = __importDefault(require("dayjs"));
 const router = express_1.default.Router();
 const User = require('../models/User');
 const middlewares_1 = require("./middlewares");
+const product_1 = __importDefault(require("../models/product"));
 const getBoolean = (value) => {
     if (value === 'true')
         return true;
@@ -92,6 +93,30 @@ router.get('/details', middlewares_1.verifyToken, middlewares_1.checkRequestMeth
                     _id: 0,
                     password: 0,
                     __v: 0,
+                },
+            },
+            {
+                $lookup: {
+                    from: product_1.default.collection.name,
+                    localField: 'selling',
+                    foreignField: '_id',
+                    as: 'selling',
+                },
+            },
+            {
+                $lookup: {
+                    from: product_1.default.collection.name,
+                    localField: 'sold',
+                    foreignField: '_id',
+                    as: 'sold',
+                },
+            },
+            {
+                $lookup: {
+                    from: product_1.default.collection.name,
+                    localField: 'bought',
+                    foreignField: '_id',
+                    as: 'bought',
                 },
             },
         ]);
