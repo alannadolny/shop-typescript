@@ -9,6 +9,7 @@ import Cart from './ui/user_settings/Cart';
 import ProductSearch from './ui/products/ProductSearch';
 import ProductNovelties from './ui/products/ProductNovelties';
 import ProductCategories from './ui/products/ProductCategories';
+import UserProfile from './ui/user_settings/UserProfile';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path='/search' element={<ProductSearch />} />
           <Route path='/novelties' element={<ProductNovelties />} />
           <Route path='/categories' element={<ProductCategories />} />
+          <Route path='/user%20panel' element={<UserProfile />} />
         </Routes>
       </BrowserRouter>
     </div>

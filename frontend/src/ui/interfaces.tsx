@@ -76,3 +76,8 @@ export interface AddToCartInterface {
   addToCart: (id: string | undefined) => void;
   logged: boolean;
 }
+
+export interface UserProfileProps {
+  user: UserDetails;
+  getUser: () => void;
+}

@@ -23,7 +23,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const pages: Array<string> = ['Categories', 'Search', 'Novelties', 'Buy now'];
-const settings: Array<string> = ['Profile', 'User panel', 'Cart', 'Logout'];
+const settings: Array<string> = ['User panel', 'Cart', 'Logout'];
 
 function Navbar({ user, getUser, logged }: UserProps) {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
