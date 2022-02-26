@@ -150,7 +150,6 @@ router.put('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, asy
 });
 router.put('/confirm', middlewares_1.checkRequestMethod, async (req, res) => {
     try {
-        console.log(req.body.id, req.body.login);
         const foundUser = await User.findOne({
             _id: req.body.id,
             login: req.body.login,

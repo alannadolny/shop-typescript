@@ -159,7 +159,6 @@ router.put(
   checkRequestMethod,
   async (req: express.Request, res: express.Response) => {
     try {
-      console.log(req.body.id, req.body.login);
       const foundUser: EditedUser = await User.findOne({
         _id: req.body.id,
         login: req.body.login,

@@ -6,7 +6,6 @@ import {
   CardActionArea,
   CardMedia,
   Box,
-  CardActions,
   Button,
 } from '@mui/material';
 import { connect } from 'react-redux';

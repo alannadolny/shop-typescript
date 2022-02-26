@@ -51,7 +51,7 @@ function ProductCategories({ products, getProductList }: ProductsProps) {
       >
         {_.uniq(products.map((el) => el.category)).map((el) => {
           return (
-            <div>
+            <div key={el}>
               <ListItem button onClick={() => setCategory(el)}>
                 <ListItemText primary={el} />
               </ListItem>

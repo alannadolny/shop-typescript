@@ -30,6 +30,7 @@ function App({ getProductList }: GetProductListProps) {
           <Route path='/details/:productId' element={<ProductDetails />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/search' element={<ProductSearch />} />
+          <Route path='/' element={<ProductSearch />} />
           <Route path='/novelties' element={<ProductNovelties />} />
           <Route path='/categories' element={<ProductCategories />} />
           <Route path='/user%20panel' element={<UserProfile />} />

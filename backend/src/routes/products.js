@@ -53,7 +53,6 @@ router.delete('/', middlewares_1.verifyToken, middlewares_1.checkRequestMethod, 
         return res.status(200).send(productToDelete);
     }
     catch (err) {
-        console.log(err);
         return res.status(500).send(err);
     }
 });

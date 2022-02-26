@@ -1,5 +1,4 @@
 import { Product } from '../../ui/interfaces';
-import { getUser } from '../users/operations';
 import { types, GetProductsSuccess } from './types';
 
 export const productsReducer = (

@@ -1,29 +1,20 @@
 import {
   Container,
   Typography,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Box,
   ListItem,
   ListItemAvatar,
   Avatar,
   ListItemText,
   List,
-  ImageListItem,
 } from '@mui/material';
 import { connect } from 'react-redux';
 import { getProducts } from '../../ducks/products/selector';
 import { getProductList } from '../../ducks/products/operation';
 import { RootReducers } from '../../ducks/store';
-import { Product, ProductsProps } from '../interfaces';
+import { ProductsProps } from '../interfaces';
 import { useEffect } from 'react';
 import * as _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Filter1Icon from '@mui/icons-material/Filter1';
 import Filter2Icon from '@mui/icons-material/Filter2';
 import Filter3Icon from '@mui/icons-material/Filter3';
@@ -59,18 +50,12 @@ function ProductNovelties({ products, getProductList }: ProductsProps) {
                 <Filter1Icon />
               </Avatar>
             </ListItemAvatar>
-            <ImageListItem
-              sx={{ maxWidth: '400px' }}
-              key={products[products.length - 1].image}
-              cols={1}
-              rows={1}
-            >
-              <img
-                src={products[products.length - 1].image}
-                alt={'error'}
-                loading='lazy'
-              />
-            </ImageListItem>
+            <img
+              style={{ maxWidth: '400px' }}
+              src={products[products.length - 1].image}
+              alt={'error'}
+              loading='lazy'
+            />
             <ListItemText
               sx={{ width: '800px' }}
               primary={products[products.length - 1].name}
@@ -92,18 +77,12 @@ function ProductNovelties({ products, getProductList }: ProductsProps) {
                 <Filter2Icon />
               </Avatar>
             </ListItemAvatar>
-            <ImageListItem
-              sx={{ maxWidth: '400px' }}
-              key={products[products.length - 2].image}
-              cols={1}
-              rows={1}
-            >
-              <img
-                src={products[products.length - 2].image}
-                alt={'error'}
-                loading='lazy'
-              />
-            </ImageListItem>
+            <img
+              style={{ maxWidth: '400px' }}
+              src={products[products.length - 2].image}
+              alt={'error'}
+              loading='lazy'
+            />
             <ListItemText
               sx={{ width: '800px' }}
               primary={products[products.length - 2].name}
@@ -125,18 +104,12 @@ function ProductNovelties({ products, getProductList }: ProductsProps) {
                 <Filter3Icon />
               </Avatar>
             </ListItemAvatar>
-            <ImageListItem
-              sx={{ maxWidth: '400px' }}
-              key={products[products.length - 3].image}
-              cols={1}
-              rows={1}
-            >
-              <img
-                src={products[products.length - 3].image}
-                alt={'error'}
-                loading='lazy'
-              />
-            </ImageListItem>
+            <img
+              style={{ maxWidth: '400px' }}
+              src={products[products.length - 3].image}
+              alt={'error'}
+              loading='lazy'
+            />
             <ListItemText
               sx={{ width: '800px' }}
               primary={products[products.length - 3].name}

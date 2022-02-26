@@ -1,4 +1,4 @@
-import { Product, ProductYupSchema } from './../../ui/interfaces';
+import { ProductYupSchema } from './../../ui/interfaces';
 import { types } from './types';
 import { createAction } from 'redux-api-middleware';
 
@@ -64,7 +64,6 @@ export const deleteProduct = (productToSell: string) => {
           return [json];
         },
       },
-
       types.DELETE_PRODUCT_FAILURE,
     ],
   });
