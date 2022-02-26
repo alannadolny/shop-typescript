@@ -54,7 +54,7 @@ As a database I used MongoDB
 
 ## Setup
 
-The first thing is to have running up MongoDB. Later if u want to run this project u need to provide this information in the .env file:
+The first thing is to have running up MongoDB. Later if you want to run this project you need to provide this information in the .env file:
 
 ```
 HOST = '...' fe. (127.0.01)
