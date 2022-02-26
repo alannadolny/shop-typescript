@@ -25,7 +25,7 @@ Backend:
 - mongoose
 - nodemailer
 
-  Frontend:
+Frontend:
 
 - React (17.0.2)
 - react-redux
