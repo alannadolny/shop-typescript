@@ -36,6 +36,7 @@ Backend:
 - typescript
 - yup
 - material UI
+- formik
 
 As a database I used MongoDB
 
