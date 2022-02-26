@@ -14,8 +14,25 @@ The main purpose of this project was to build a shop system using typescript and
 
 ## Technologies \ Libraries Used
 
-Backend: - typescript - cookie-parser - cors - dayjs - express - jsonwebtoken - mongoose - nodemailer
-Frontend: - React (17.0.2) - react-redux - react-router-dom - redux-api-middleware - redux-logger - redux-thunk - typescript - yup - material UI
+Backend:
+-typescript
+-cookie-parser
+-cors
+-dayjs
+-express
+-jsonwebtoken
+-mongoose
+-nodemailer
+Frontend:
+-React (17.0.2)
+-react-redux
+-react-router-dom
+-redux-api-middleware
+-redux-logger
+-redux-thunk
+-typescript
+-yup
+-material UI
 
 As a database I used MongoDB
 
