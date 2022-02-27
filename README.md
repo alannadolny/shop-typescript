@@ -78,16 +78,9 @@ in the backend directory to install all dependencies.
 If you have already installed it, you need to write
 
 ```
-tsc
-```
-
-in first console and
-
-```
 node ./src/index.js
 ```
 
-in the second console.
 If you see 'connected to MongoDB...' it is running properly.
 
 To run the client-side application you need to write
