@@ -3,7 +3,7 @@
 ## Table of Contents
 
 - [General Info](#general-information)
-- [Technologies \ Libraries Used](#technologies-used)
+- [Technologies \ Libraries Used](#technologies-\-libraries-used)
 - [Features](#features)
 - [Setup](#setup)
 - [Project Status](#project-status)
