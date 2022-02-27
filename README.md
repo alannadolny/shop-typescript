@@ -111,4 +111,3 @@ Project is completed (26.02.2022)
 <img src="./jpg/Zrzut ekranu 2022-02-27 033722.png"/>
 <img src="./jpg/Zrzut ekranu 2022-02-27 033747.png"/>
 <img src="./jpg/Zrzut ekranu 2022-02-27 033827.png"/>
-<img src="./jpg/Zrzut ekranu 2022-02-27 033841.png"/>
