@@ -7,7 +7,7 @@
 - [Features](#features)
 - [Setup](#setup)
 - [Project Status](#project-status)
-- [Screenshots]($screenshots)
+- [Screenshots](#screenshots)
 
 ## General Information
 
