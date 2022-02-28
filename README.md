@@ -38,6 +38,8 @@ Frontend:
 - yup
 - material UI
 - formik
+- lodash
+- axios
 
 As a database I used MongoDB
 
